@@ -149,17 +149,11 @@ header h2 {
     outline: none;
 }
 
-/* Success Card */
-.success-card { text-align: center; padding: 4rem 2rem; }
-.success-icon { font-size: 5rem; margin-bottom: 2rem; display: block; }
-
-/* Progress */
+/* Progress Bar */
 .progress-container { width: 100%; height: 6px; background: rgba(255, 255, 255, 0.05); border-radius: 3px; }
 .progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary)); width: 0%; transition: width 0.4s ease; }
 
-/* Poll UI */
-.poll-grid { display: grid; gap: 2.5rem; }
-.category-card { background: var(--surface-color); padding: 2.5rem; border-radius: 24px; border: 1px solid var(--border-color); backdrop-filter: var(--glass-effect); position: relative; }
+/* Podium UI */
 .podium-container { display: flex; justify-content: center; align-items: flex-end; gap: 1rem; margin: 2rem 0; height: 160px; }
 .podium-item { background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); border-bottom: none; border-radius: 12px 12px 0 0; width: 80px; display: flex; flex-direction: column; align-items: center; padding-bottom: 0.5rem; position: relative; }
 .rank-1 { height: 100%; border-color: var(--accent-tertiary) !important; }
@@ -167,6 +161,56 @@ header h2 {
 .rank-3 { height: 50%; }
 .rank-badge { position: absolute; top: -15px; width: 30px; height: 30px; background: #020617; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 900; border: 2px solid var(--border-color); }
 .rank-1 .rank-badge { border-color: var(--accent-tertiary); color: var(--accent-tertiary); }
+
+/* Success Card */
+.success-card { text-align: center; padding: 4rem 2rem; }
+.success-icon { font-size: 5rem; margin-bottom: 2rem; display: block; }
+
+/* Bottom Navigation */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(20px);
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-around;
+    padding: 1rem 0;
+    padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+    z-index: 1000;
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    color: var(--text-muted);
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    flex: 1;
+}
+
+.nav-item.active {
+    color: var(--accent-primary);
+}
+
+.nav-item i {
+    font-size: 1.5rem;
+    margin-bottom: 2px;
+}
+
+/* Footer Padding for Nav */
+.container {
+    padding-bottom: 8rem;
+}
 
 .nominees-list { display: flex; flex-direction: column; gap: 0.75rem; }
 .nominee-option { position: relative; padding: 1rem 1.5rem; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-color); border-radius: 12px; cursor: pointer; display: flex; justify-content: space-between; overflow: hidden; }

@@ -23,9 +23,7 @@
             <div id="global-stats" style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 2rem;"></div>
         </header>
 
-        <main id="main-content">
-            <!-- Dynamic Content -->
-        </main>
+        <main id="main-content"></main>
 
         <div class="progress-container" id="progress-container" style="margin-top: 3rem;">
             <div class="progress-fill" id="progress-fill"></div>
@@ -37,9 +35,23 @@
             <div class="footer-icon">🎓</div>
             <span class="school-motto">Great People, Great Future</span>
             <p class="footer-tag">Perfect Success Academy Masaka &copy; 2026</p>
-            <p class="footer-tag" style="margin-top: 0.5rem;">Class of 2012 - 2014 Reunion Committee</p>
         </footer>
     </div>
+
+    <nav class="bottom-nav">
+        <div class="nav-item" id="nav-home" onclick="setMode('home')">
+            <i>🏠</i>
+            <span>Home</span>
+        </div>
+        <div class="nav-item" id="nav-voting" onclick="setMode('voting')">
+            <i>🗳️</i>
+            <span>Voting Hall</span>
+        </div>
+        <div class="nav-item" id="nav-hall" onclick="setMode('hall-of-fame')">
+            <i>🏆</i>
+            <span>Hall of Fame</span>
+        </div>
+    </nav>
 
     <!-- Toast Notifications -->
     <div id="toast" class="toast">

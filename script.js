@@ -46,18 +46,30 @@ const showToast = (message) => {
     setTimeout(() => toast?.classList.remove('show'), 5000);
 };
 
+const updateNav = () => {
+    document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+    if (appState.mode === 'home') document.getElementById('nav-home')?.classList.add('active');
+    if (appState.mode === 'voting' || appState.mode === 'registration' || appState.mode === 'success') document.getElementById('nav-voting')?.classList.add('active');
+    if (appState.mode === 'hall-of-fame') document.getElementById('nav-hall')?.classList.add('active');
+};
+
 const setMode = (mode) => {
     appState.mode = mode;
     if (mode === 'voting') {
         if (!currentAlumni) {
             appState.mode = 'registration';
-        } else if (pollResults[1].voters.includes(currentAlumni.name)) {
-            showToast(`Hello ${currentAlumni.name}, our registry shows you have already cast your ballot!`);
-            appState.mode = 'hall-of-fame';
         } else {
-            appState.step = 1;
+            // Check if already voted in current poll version
+            const hasVoted = pollResults[1]?.voters.includes(currentAlumni.name);
+            if (hasVoted) {
+                showToast(`Alumni ${currentAlumni.name}, our records show your legendary ballot is already cast.`);
+                appState.mode = 'hall-of-fame';
+            } else {
+                appState.step = 1;
+            }
         }
     }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     renderApp();
 };
 
@@ -97,7 +109,7 @@ const castSessionVote = (nominee) => {
 
 const nextStep = () => {
     if (!appState.sessionVotes[appState.step]) {
-        showToast('Please select a legend for this award.');
+        showToast('Please select a nominee to proceed.');
         return;
     }
     if (appState.step < 10) {
@@ -112,7 +124,7 @@ const nextStep = () => {
 const submitBallot = () => {
     pollData.forEach(cat => {
         const choice = appState.sessionVotes[cat.id];
-        if (pollResults[cat.id]) {
+        if (pollResults[cat.id] && choice) {
             pollResults[cat.id].votes[choice]++;
             pollResults[cat.id].total++;
             pollResults[cat.id].voters.push(currentAlumni.name);
@@ -120,12 +132,13 @@ const submitBallot = () => {
     });
     localStorage.setItem(STORAGE_KEY, JSON.stringify(pollResults));
     appState.mode = 'hall-of-fame';
-    showToast('Ballot Finalized! Thank you for participating.');
+    showToast('Registry finalized! Your votes are part of PSAM history.');
     renderApp();
 };
 
 // 3. Render
 const renderApp = () => {
+    updateNav();
     const main = document.getElementById('main-content');
     const container = document.getElementById('poll-container');
     const progress = document.getElementById('progress-container');
@@ -134,7 +147,7 @@ const renderApp = () => {
 
     if (!main || !container) return;
 
-    if (stats) stats.innerHTML = `🌟 <strong>${alumniRegistry.length}</strong> Event Registrations &middot; 🗳️ <strong>${pollResults[1]?.total || 0}</strong> Votes Recorded`;
+    if (stats) stats.innerHTML = `🎓 <strong>${alumniRegistry.length}</strong> Event Registrations &middot; 🗳️ <strong>${pollResults[1]?.total || 0}</strong> Ballots Finalized`;
 
     main.innerHTML = '';
     container.innerHTML = '';
@@ -146,12 +159,12 @@ const renderApp = () => {
                 <div class="menu-card" onclick="setMode('voting')">
                     <span class="menu-icon">🗳️</span>
                     <h3>The Voting Hall</h3>
-                    <p>Register for the reunion and cast your legendary ballot.</p>
+                    <p>Enter the legendary ballot ground once you've registered for the reunion.</p>
                 </div>
                 <div class="menu-card" onclick="setMode('hall-of-fame')">
                     <span class="menu-icon">🏆</span>
                     <h3>Hall of Fame</h3>
-                    <p>Celebrate the standing legends of PSAM 2012-2014.</p>
+                    <p>Celebrate the standing legends of the PSAM Class of 2012-2014.</p>
                 </div>
             </div>
         `;
@@ -169,14 +182,14 @@ const renderApp = () => {
                         <div class="form-group"><label>Email Address</label><input type="email" name="email" required placeholder="john@example.com"></div>
                         <div class="form-group"><label>Phone Number</label><input type="tel" name="phone" required placeholder="+234..."></div>
                         <div class="form-group">
-                            <label>Will you be attending?</label>
+                            <label>Are you attending?</label>
                             <select name="attending" style="width:100%; padding:1.25rem; background:rgba(255,255,255,0.05); border:1px solid var(--border-color); color:#fff; border-radius:12px; font-family:inherit; outline:none;">
                                 <option value="Yes">Yes, I'll be there!</option>
-                                <option value="Maybe">Maybe (Deciding)</option>
-                                <option value="No">No, can't make it</option>
+                                <option value="Maybe">Maybe (Still Deciding)</option>
+                                <option value="No">No, I can't make it</option>
                             </select>
                         </div>
-                        <button type="submit" class="next-btn" style="width:100%; margin-top:1.5rem;">Join the Reunion Event</button>
+                        <button type="submit" class="next-btn" style="width:100%; margin-top:1.5rem;">Register for Event</button>
                     </form>
                 </div>
             </div>
@@ -214,7 +227,7 @@ const renderApp = () => {
                     `).join('')}
                 </div>
                 <button class="next-btn" style="width:100%; margin-top:3rem;" ${!sel ? 'disabled' : ''} onclick="nextStep()">
-                    ${appState.step === 10 ? 'Finish Ballot' : 'Next Category'}
+                    ${appState.step === 10 ? 'Finish Ballot' : 'Next Award'}
                 </button>
             </div>
         `;
@@ -225,7 +238,7 @@ const renderApp = () => {
             <div style="text-align:center; padding:2rem;">
                 <h2 style="font-size:3.5rem; margin-bottom:1rem; font-weight:900;">Iconic Standings</h2>
                 <div style="display:flex; justify-content:center; gap:1.5rem; margin-bottom:4rem;">
-                    <button class="share-btn" style="margin:0" onclick="setMode('home')">Great Hall</button>
+                    <button class="share-btn" style="margin:0" onclick="setMode('home')">Return Home</button>
                     <button class="share-btn" style="margin:0; background:rgba(255,255,255,0.05)" onclick="resetSession()">New Alumni</button>
                 </div>
             </div>
@@ -241,7 +254,7 @@ const renderApp = () => {
                                 <div class="podium-item rank-1"><span class="rank-badge">1</span><p style="font-size:0.85rem; font-weight:900; color:#fff; margin-top:auto;">${sorted[0] || '-'}</p></div>
                                 <div class="podium-item rank-3"><span class="rank-badge">3</span><p style="font-size:0.75rem; color:var(--text-secondary); margin-top:auto;">${sorted[2] || '-'}</p></div>
                             </div>
-                            <div class="nominees-list">
+                            <div class="nominees-list" style="margin-top:1rem">
                                 ${cat.nominees.map(n => {
                                     const v = data.votes[n];
                                     const p = data.total === 0 ? 0 : Math.round((v / data.total) * 100);
@@ -276,3 +289,4 @@ window.castSessionVote = castSessionVote;
 window.nextStep = nextStep;
 window.resetSession = resetSession;
 window.startVoting = startVoting;
+window.submitBallot = submitBallot;
