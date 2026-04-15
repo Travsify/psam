@@ -1,0 +1,10 @@
+services:
+  - type: static
+    name: psam-alumni-hall
+    env: static
+    buildCommand: ""
+    publishPath: "."
+    headers:
+      - path: "/*"
+        name: "Cache-Control"
+        value: "no-cache"
