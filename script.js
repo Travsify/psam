@@ -260,15 +260,17 @@ const renderApp = () => {
         const cat = pollData[appState.step - 1];
         const sel = appState.sessionVotes[appState.step];
         container.innerHTML = `
-            <div class="category-card" style="max-width:700px; margin:0 auto;">
-                <span style="color:var(--accent-secondary); font-size:0.8rem; font-weight:800; text-transform:uppercase;">Gala Award ${appState.step} / ${pollData.length}</span>
-                <h2 class="category-title" style="font-size:2.4rem; margin-top:1rem;">${cat.title}</h2>
-                <p style="color:var(--text-secondary); font-size:0.9rem;">${cat.desc}</p>
+            <div class="category-card" style="max-width:700px; margin:0 auto; border-top: 4px solid var(--accent-primary);">
+                <span style="color:var(--accent-secondary); font-size:0.8rem; font-weight:800; text-transform:uppercase; letter-spacing:0.1em;">Gala Award ${appState.step} / ${pollData.length}</span>
+                <h2 class="category-title" style="font-size:2.8rem; margin-top:1rem; line-height:1.1;">${cat.title}</h2>
+                <div style="margin: 1.5rem 0 3rem; padding-left: 1rem; border-left: 2px solid rgba(131, 48, 255, 0.3);">
+                    <p style="color:var(--text-secondary); font-size:1.1rem; font-style:italic;">"${cat.desc}"</p>
+                </div>
                 <div class="nominees-list" style="margin-top:2rem">
                     ${cat.nominees.map(n => `<div class="nominee-option ${sel === n ? 'selected' : ''}" onclick="castSessionVote('${n}')"><span class="nominee-name">${n}</span></div>`).join('')}
                 </div>
                 <button class="next-btn" style="width:100%; margin-top:3rem;" ${!sel ? 'disabled' : ''} onclick="nextStep()">
-                    ${appState.step === pollData.length ? 'Submit Final Ballot' : 'Next Award'}
+                    ${appState.step === pollData.length ? 'Submit Final Ballot' : 'Confirm Choice & Next Award'}
                 </button>
             </div>
         `;
@@ -277,20 +279,36 @@ const renderApp = () => {
     if (appState.mode === 'hall-of-fame') {
         main.innerHTML = `
             <div style="text-align:center; padding:2rem;">
-                <h2 style="font-size:3.5rem; font-weight:900;">Current Standings</h2>
-                <button class="share-btn" onclick="resetSession()">Switch Alumni Login</button>
+                <h2 style="font-size:3.5rem; font-weight:900;">The Standing Legends</h2>
+                <div style="display:flex; justify-content:center; gap:1.5rem; margin-bottom:4rem;">
+                    <button class="share-btn" onclick="resetSession()">Logout / Switch Alumni</button>
+                </div>
             </div>
             <div class="poll-grid" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap:2.5rem;">
                 ${pollData.map(cat => {
                     const data = pollResults[cat.id];
                     const sorted = [...cat.nominees].sort((a,b) => (data.votes[b] || 0) - (data.votes[a] || 0));
                     return `
-                        <div class="category-card" style="padding:1.5rem;">
-                            <h2 style="font-size:1.2rem; margin-bottom:1rem;">${cat.title}</h2>
+                        <div class="category-card" style="padding:2rem;">
+                            <h2 style="font-size:1.4rem; margin-bottom:0.5rem; font-weight:900;">${cat.title}</h2>
+                            <p style="color:var(--text-secondary); font-size:0.85rem; margin-bottom:2rem; font-style:italic; opacity:0.8;">${cat.desc}</p>
                             <div class="podium-container">
-                                <div class="podium-item rank-2"><span class="rank-badge">2</span><p style="font-size:0.75rem; margin-top:auto;">${sorted[1] || '-'}</p></div>
-                                <div class="podium-item rank-1"><span class="rank-badge">1</span><p style="font-size:0.8rem; font-weight:900; margin-top:auto;">${sorted[0] || '-'}</p></div>
-                                <div class="podium-item rank-3"><span class="rank-badge">3</span><p style="font-size:0.75rem; margin-top:auto;">${sorted[2] || '-'}</p></div>
+                                <div class="podium-item rank-2"><span class="rank-badge">2</span><p style="font-size:0.75rem; margin-top:auto; font-weight:600;">${sorted[1] || '-'}</p></div>
+                                <div class="podium-item rank-1"><span class="rank-badge">1</span><p style="font-size:0.85rem; font-weight:900; margin-top:auto; color:var(--accent-tertiary);">${sorted[0] || '-'}</p></div>
+                                <div class="podium-item rank-3"><span class="rank-badge">3</span><p style="font-size:0.75rem; margin-top:auto; font-weight:600;">${sorted[2] || '-'}</p></div>
+                            </div>
+                            <div class="nominees-list" style="margin-top:1.5rem;">
+                                ${cat.nominees.map(n => {
+                                    const v = data.votes[n];
+                                    const p = data.total === 0 ? 0 : Math.round((v / data.total) * 100);
+                                    return `
+                                        <div class="nominee-option" style="pointer-events:none; padding: 0.6rem 1rem; margin-bottom:0.5rem; background:rgba(255,255,255,0.02)">
+                                            <div class="vote-bar" style="width:${p}%"></div>
+                                            <span class="nominee-name" style="font-size:0.85rem">${n}</span>
+                                            <span class="vote-percentage" style="font-size:0.85rem; font-weight:800; color:var(--accent-secondary)">${v} (${p}%)</span>
+                                        </div>
+                                    `;
+                                }).join('')}
                             </div>
                         </div>
                     `;
