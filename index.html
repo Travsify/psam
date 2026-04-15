@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PSAM Class of 2012-2014 · The Alumni Grand Hall</title>
+    <!-- Google Fonts: Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="geometric-overlay"></div>
+    
+    <div class="container">
+        <header>
+            <div style="background: rgba(131, 48, 255, 0.1); border: 1px solid rgba(131, 48, 255, 0.2); color: var(--accent-primary); padding: 0.5rem 1.5rem; border-radius: 100px; display: inline-block; font-size: 0.8rem; font-weight: 700; margin-bottom: 2rem; text-transform: uppercase; letter-spacing: 0.1em;">
+                Great People, Great Future
+            </div>
+            <h1>Perfect Success Academy Masaka</h1>
+            <h2>Class of 2012&ndash;2014 &middot; Grand Hall</h2>
+            <div id="global-stats" style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 2rem;"></div>
+        </header>
+
+        <main id="main-content">
+            <!-- Dynamic Content: Entry Menu, Registration, Voting, or Hall of Fame -->
+            <div class="entry-menu">
+                <div class="menu-card" onclick="setMode('voting')">
+                    <span class="menu-icon">🗳️</span>
+                    <h3>The Voting Hall</h3>
+                    <p>Enter your credentials to cast your vote for the 2026 Legends Awards.</p>
+                </div>
+                <div class="menu-card" onclick="setMode('hall-of-fame')">
+                    <span class="menu-icon">🏆</span>
+                    <h3>Hall of Fame</h3>
+                    <p>View the current standings and celebrate the PSAM Class legends.</p>
+                </div>
+            </div>
+        </main>
+
+        <div class="progress-container" id="progress-container" style="margin-top: 3rem;">
+            <div class="progress-fill" id="progress-fill"></div>
+        </div>
+
+        <div id="poll-container" style="margin-top: 2rem;"></div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toast" class="toast">
+        <div class="toast-content">
+            <span id="toast-message"></span>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
